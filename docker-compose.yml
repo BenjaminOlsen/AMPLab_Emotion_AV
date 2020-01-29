@@ -1,7 +1,7 @@
 version: "2"
 services:
   amplabessentia:
-    build: .
+    image: mtgupf/amplab-jamendo-notebook
     ports:
       - "8888:8888"
     volumes:
