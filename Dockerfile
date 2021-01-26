@@ -14,8 +14,8 @@ RUN chmod +x /usr/bin/tini
 
 RUN apt-get update && apt-get -y upgrade && apt-get install -y gosu && rm -rf /var/lib/apt/lists/*
 
-RUN pip install essentia-tensorflow -f https://essentia.upf.edu/python-wheels/
-RUN pip install jupyter matplotlib pandas scipy
+RUN pip install --no-cache-dir essentia-tensorflow
+RUN pip install --no-cache-dir jupyter matplotlib pandas scipy
 
 EXPOSE 8888
 
