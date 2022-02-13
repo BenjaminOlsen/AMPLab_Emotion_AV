@@ -1,6 +1,6 @@
 ## AMPLab Jupyter notebook with Essentia and Tensorflow
 
-This notebook is provided for the 2021 AMPLab course, for the assignments
+This notebook is provided for the 2020-2022 AMPLab courses, for the assignments
 issued for the Large-scale Music Processing module.
 It is designed to provide a fast-to-use environment with jupyter notebook and essentia
 pre-installed.
