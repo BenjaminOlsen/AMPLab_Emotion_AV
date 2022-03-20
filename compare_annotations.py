@@ -29,7 +29,7 @@ with open('annotation_summary_spotify.json', 'r') as f:
 # read the arousal - valence calculations from each model:
 
 prediction_paths = []
-for subdir, dirs, files in os.walk('predictions/1'):
+for subdir, dirs, files in os.walk('predictions/3'):
     for file in files:
         filepath = os.path.join(subdir, file)
         if file.endswith(".json"):
@@ -100,7 +100,7 @@ for filepath in prediction_paths:
                     continue
                 elif ( relative_arousal == 1 and predicted_valence_diff > EQUIVALENT_THRESHOLD
                     or relative_arousal == 0 and abs(predicted_valence_diff) < EQUIVALENT_THRESHOLD
-                    or relative_arousal == -1 and predicted_valence_diff > -EQUIVALENT_THRESHOLD):
+                    or relative_arousal == -1 and predicted_valence_diff < -EQUIVALENT_THRESHOLD):
                     agree_valence = True
                     valence_agree_cnt += 1
                     if PRINT_DEBUG:
@@ -122,7 +122,7 @@ for filepath in prediction_paths:
                     continue
                 elif ( relative_arousal == 1 and predicted_arousal_diff > EQUIVALENT_THRESHOLD
                     or relative_arousal == 0 and abs(predicted_arousal_diff) < EQUIVALENT_THRESHOLD
-                    or relative_arousal == -1 and predicted_arousal_diff > -EQUIVALENT_THRESHOLD):
+                    or relative_arousal == -1 and predicted_arousal_diff < -EQUIVALENT_THRESHOLD):
                     agree_arousal = True
                     arousal_agree_cnt += 1
                     if PRINT_DEBUG:
