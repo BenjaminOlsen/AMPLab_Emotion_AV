@@ -9,9 +9,7 @@ from essentia import Pool
 from essentia.standard import (
     MonoLoader,
     TensorflowPredict,
-    TensorflowPredictEffnetDiscogs,
     TensorflowPredictMusiCNN,
-    TensorflowPredictVGGish,
 )
 
 # Model files for inference of embeddings and arousal/valence.
@@ -60,18 +58,10 @@ metadatas = {
     'deam-musicnn': os.path.join(essentia_path, "deam-musicnn-msd-1/deam-musicnn-msd-1.json"),
     'emo-musicnn': os.path.join(essentia_path, "emomusic-musicnn-msd-1/emomusic-musicnn-msd-1.json"),
 }
-# Storing audio name and AV. {audio_name: valence, arousal}
-deam_effnet_audio = {}
-emo_effnet_audio = {}
-deam_vggish_audio = {}
-emo_vggish_audio = {}
-deam_musicnn_audio = {}
-emo_musicnn_audio = {}
 
 
-# instantiate all the models, store in this dict:
+
 #---------------------------------------------------------------#
-# VGGish Models
 av_model_path = pb_models['emo-musicnn']
 embeddings_model_path = embeddings['musicnn']
 #I/O Layers

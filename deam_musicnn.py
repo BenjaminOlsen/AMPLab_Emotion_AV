@@ -60,18 +60,9 @@ metadatas = {
     'deam-musicnn': os.path.join(essentia_path, "deam-musicnn-msd-1/deam-musicnn-msd-1.json"),
     'emo-musicnn': os.path.join(essentia_path, "emomusic-musicnn-msd-1/emomusic-musicnn-msd-1.json"),
 }
-# Storing audio name and AV. {audio_name: valence, arousal}
-deam_effnet_audio = {}
-emo_effnet_audio = {}
-deam_vggish_audio = {}
-emo_vggish_audio = {}
-deam_musicnn_audio = {}
-emo_musicnn_audio = {}
 
 
-# instantiate all the models, store in this dict:
-#---------------------------------------------------------------#
-# VGGish Models
+
 av_model_path = pb_models['deam-musicnn']
 embeddings_model_path = embeddings['musicnn']
 #I/O Layers
@@ -94,6 +85,7 @@ embeddings_model = TensorflowPredictMusiCNN(
 # Instantiate the arousal-valence model
 av_input_layer = metadata["schema"]["inputs"][0]["name"]
 av_output_layer = metadata["schema"]["outputs"][0]["name"]
+
 av_model = TensorflowPredict(
     graphFilename=av_model_path,
     inputs=[av_input_layer],

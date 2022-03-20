@@ -31,7 +31,7 @@ for subdir, dirs, files in os.walk(audio_dir):
             all_audio_paths.append(filepath)
         else:
             print("forgetting: {}".format(os.path.join(subdir, file)))
-            
+
 print(f"total_audio_cnt: {total_audio_cnt}")
 #print(all_audio_paths)
 
@@ -60,13 +60,6 @@ metadatas = {
     'deam-musicnn': os.path.join(essentia_path, "deam-musicnn-msd-1/deam-musicnn-msd-1.json"),
     'emo-musicnn': os.path.join(essentia_path, "emomusic-musicnn-msd-1/emomusic-musicnn-msd-1.json"),
 }
-# Storing audio name and AV. {audio_name: valence, arousal}
-deam_effnet_audio = {}
-emo_effnet_audio = {}
-deam_vggish_audio = {}
-emo_vggish_audio = {}
-deam_musicnn_audio = {}
-emo_musicnn_audio = {}
 
 
 #---------------------------------------------------------------#
@@ -75,7 +68,6 @@ av_model_path = pb_models['emo-vggish']
 embeddings_model_path = embeddings['vggish']
 #I/O Layers
 metadata = json.load(open(metadatas['emo-vggish'], "r"))
-
 
 # Parameters for the VGGish embeddings
 output_layer = "model/vggish/embeddings"
@@ -110,7 +102,7 @@ for filepath in all_audio_paths:
         feature = embeddings.reshape(-1, 1, 1, embeddings.shape[1])
         pool = Pool() # TODO declare outside loop?
         pool.set(av_input_layer, feature)
-            
+
         print(f"running av_model on {filepath}")
         predictions = av_model(pool)[av_output_layer].squeeze()
 

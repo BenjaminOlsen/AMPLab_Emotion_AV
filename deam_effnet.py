@@ -8,6 +8,7 @@ from essentia.standard import (
     MonoLoader,
     TensorflowPredict,
     TensorflowPredictEffnetDiscogs,
+    TensorflowPredictMusiCNN
 )
 print("SUCK ITTT")
 # Model files for inference of embeddings and arousal/valence.
@@ -58,8 +59,8 @@ metadatas = {
 }
 
 
-av_model_path = os.path.join(essentia_path, "deam-effnet-discogs-1/deam-effnet-discogs-1.pb")
-embeddings_model_path = os.path.join(essentia_path, "effnet-discogs-1.pb")
+av_model_path = pb_models['deam-effnet']
+embeddings_model_path = embeddings['effnet']
 #I/O Layers
 metadata = json.load(open(metadatas['deam-effnet'], "r"))
 
@@ -72,12 +73,12 @@ output_layer = "onnx_tf_prefix_BatchNormalization_496/add_1"
 
 # Instantiate the embeddings model
 print ("instantiating embeddings model")
-embeddings_model = TensorflowPredictEffnetDiscogs(
+embeddings_model = TensorflowPredictMusiCNN(
     graphFilename=embeddings_model_path,
     input=input_layer,
     output=output_layer,
     patchSize=patch_size,
-    patchHopSize=patch_hop_size
+    patchHopSize=patch_hop_size,
 )
 
 print( "instantiating AV model")
@@ -104,7 +105,7 @@ for filepath in all_audio_paths:
 
         embeddings = embeddings_model(audio)
         feature = embeddings.reshape(-1, 1, 1, embeddings.shape[1])
-        pool = Pool() # TODO declare outside loop?
+        pool = Pool()
         pool.set(av_input_layer, feature)
 
         print(f"running av_model on {filepath}")

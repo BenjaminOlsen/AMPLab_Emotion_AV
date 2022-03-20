@@ -56,16 +56,8 @@ metadatas = {
     'deam-musicnn': os.path.join(essentia_path, "deam-musicnn-msd-1/deam-musicnn-msd-1.json"),
     'emo-musicnn': os.path.join(essentia_path, "emomusic-musicnn-msd-1/emomusic-musicnn-msd-1.json"),
 }
-# Storing audio name and AV. {audio_name: valence, arousal}
-deam_effnet_audio = {}
-emo_effnet_audio = {}
-deam_vggish_audio = {}
-emo_vggish_audio = {}
-deam_musicnn_audio = {}
-emo_musicnn_audio = {}
 
 
-# instantiate all the models, store in this dict:
 #---------------------------------------------------------------#
 
 av_model_path = pb_models['emo-effnet']
@@ -81,7 +73,7 @@ input_layer = "melspectrogram"
 output_layer = "onnx_tf_prefix_BatchNormalization_496/add_1"
 
 # Instantiate the embeddings model
-embeddings_model = TensorflowPredictEffnetDiscogs(
+embeddings_model = TensorflowPredictMusiCNN(
     graphFilename=embeddings_model_path,
     input=input_layer,
     output=output_layer,
