@@ -14,7 +14,7 @@ RUN chmod +x /usr/bin/tini
 
 RUN apt-get update && apt-get -y upgrade && apt-get install -y gosu && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir essentia-tensorflow
+RUN pip install -U --no-cache-dir essentia-tensorflow
 RUN pip install --no-cache-dir jupyter matplotlib pandas scipy
 
 EXPOSE 8888
