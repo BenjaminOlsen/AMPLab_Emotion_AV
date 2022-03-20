@@ -18,3 +18,18 @@ Start the server
     docker-compose up
 
 Access the notebook server at http://localhost:8888. The password to access the notebook is 'mir'
+
+
+
+OR just run locally in this docker container, the command is in
+    start_bash_in_docker.zsh
+
+then run the scripts:
+    ./emo_effnet.py
+    ./emo_musicnn.py
+    ./emo_vggish.py
+    ./deam_effnet.py
+    ./deam_musicnn.py
+    ./deam_vggish.py
+
+sloppy but effective
