@@ -2,7 +2,7 @@ import json
 import os
 import math
 
-EQUIVALENT_THRESHOLD = 0.05 #FIXME
+EQUIVALENT_THRESHOLD = 0.1 #FIXME
 
 # read self annotations:
 with open('annotation_summary_self.json', 'r') as f:
@@ -70,7 +70,6 @@ for filepath in prediction_paths:
         fn, ext = os.path.splitext(basename)
 
 
-
         # iterate through self annotations,
         # find corresponding predicted arousal/valence pairs.
         # see if they agree
@@ -92,12 +91,12 @@ for filepath in prediction_paths:
                 #############################
                 # valence
                 predicted_valence_diff = prediction_a[0] - prediction_b[0]
-
+                omit_valence = False
                 if math.isinf(relative_valence): # skip unanswered
                     if PRINT_DEBUG:
-                        print("[valence]: skipping {} - {}".format(a_name, b_name))
+                        print("[valence]: skipping {} - {}: valence {}".format(a_name, b_name, relative_valence))
+                    omit_valence = True
                     valence_omit_cnt += 1
-                    continue
                 elif ( relative_arousal == 1 and predicted_valence_diff > EQUIVALENT_THRESHOLD
                     or relative_arousal == 0 and abs(predicted_valence_diff) < EQUIVALENT_THRESHOLD
                     or relative_arousal == -1 and predicted_valence_diff < -EQUIVALENT_THRESHOLD):
@@ -109,17 +108,18 @@ for filepath in prediction_paths:
                     agree_valence = False
                     if PRINT_DEBUG:
                         print(f"[valence]: DISAGREE {valence_cnt + 1 - valence_agree_cnt}: diff: {predicted_valence_diff:.4f} ({a_name} - {b_name})")
-                valence_cnt += 1
+                if not omit_valence:
+                    valence_cnt += 1
 
                 #############################
                 # arousal
                 predicted_arousal_diff = prediction_a[1] - prediction_b[1]
-
+                omit_arousal = False
                 if math.isinf(relative_arousal): # skip unanswered
                     if PRINT_DEBUG:
-                        print("[arousal]: skipping {} - {}".format(a_name, b_name))
+                        print("[arousal]: skipping {} - {}: arousal {}".format(a_name, b_name, relative_arousal))
+                    omit_arousal = True
                     arousal_omit_cnt += 1
-                    continue
                 elif ( relative_arousal == 1 and predicted_arousal_diff > EQUIVALENT_THRESHOLD
                     or relative_arousal == 0 and abs(predicted_arousal_diff) < EQUIVALENT_THRESHOLD
                     or relative_arousal == -1 and predicted_arousal_diff < -EQUIVALENT_THRESHOLD):
@@ -132,7 +132,8 @@ for filepath in prediction_paths:
                     if PRINT_DEBUG:
                         print(f"[arousal]: DISAGREE {arousal_cnt + 1 - arousal_agree_cnt}: diff: {predicted_arousal_diff:.4f} ({a_name} - {b_name})")
 
-                arousal_cnt += 1
+                if not omit_arousal:
+                    arousal_cnt += 1
 
         agree_rate_arousal = arousal_agree_cnt / arousal_cnt
         agree_rate_valence = valence_agree_cnt / valence_cnt
