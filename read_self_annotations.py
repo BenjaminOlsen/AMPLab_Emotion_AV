@@ -63,7 +63,7 @@ for filepath in all_annot_paths:
         elif higher_valence == 'b':
             higher_valence_name = b_name
             lower_valence_name = a_name
-            a_valence = inf
+            a_valence = -1 
             val_char = '<'
         elif higher_valence == 'not_selected':
             higher_arousal_name = a_name
