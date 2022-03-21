@@ -2,7 +2,7 @@ import json
 import os
 import math
 
-EQUIVALENT_THRESHOLD = 0.1 #FIXME
+EQUIVALENT_THRESHOLD = 0.02 #FIXME
 PREDICTION_DIR = 'predictions/3'
 PRINT_DEBUG = False
 
@@ -124,6 +124,9 @@ def do_compare_annotations(remove_inconsistencies = False):
         arousal_agree_cnt = 0
         valence_omit_cnt = 0
         arousal_omit_cnt = 0
+        equal_arousal_cnt = 0
+        equal_valence_cnt = 0
+
         for a_name in annotations_self:
             for b_name in annotations_self[a_name]:
                 prediction_a = prediction_data[a_name]
@@ -140,6 +143,10 @@ def do_compare_annotations(remove_inconsistencies = False):
                 else:
                     # valid for model predictions only!
                     predicted_valence_diff = prediction_a[0] - prediction_b[0]
+
+                if abs(predicted_valence_diff) < EQUIVALENT_THRESHOLD:
+                    equal_valence_cnt += 1
+
 
                 omit_valence = False
                 if math.isinf(relative_valence): # skip unanswered
@@ -169,6 +176,9 @@ def do_compare_annotations(remove_inconsistencies = False):
                     # valid for model predictions only!
                     predicted_arousal_diff = prediction_a[1] - prediction_b[1]
 
+                if abs(predicted_arousal_diff) < EQUIVALENT_THRESHOLD:
+                    equal_arousal_cnt += 1
+
                 omit_arousal = False
                 if math.isinf(relative_arousal): # skip unanswered
                     if PRINT_DEBUG:
@@ -190,6 +200,7 @@ def do_compare_annotations(remove_inconsistencies = False):
                 if not omit_arousal:
                     arousal_cnt += 1
 
+        print(f"equal valence: {equal_valence_cnt}; equal arousal: {equal_arousal_cnt}; threshold: {EQUIVALENT_THRESHOLD}")
         return arousal_agree_cnt, arousal_omit_cnt, arousal_cnt, \
                valence_agree_cnt, valence_omit_cnt, valence_cnt
 
@@ -199,6 +210,7 @@ def do_compare_annotations(remove_inconsistencies = False):
     ################# MODEL PREDICTIONS ########################
     ############################################################
     comparison = {}
+    print("arousal")
     for filepath in prediction_paths:
         with open(filepath, 'r') as f:
             prediction_data = json.load(f)
@@ -211,7 +223,24 @@ def do_compare_annotations(remove_inconsistencies = False):
 
             agree_rate_arousal = arousal_agree_cnt / arousal_cnt
             agree_rate_valence = valence_agree_cnt / valence_cnt
-            print(f"~~~~~~~~~~~~\n{fn}:\n-- arousal: agree {arousal_agree_cnt}/{arousal_cnt} = {agree_rate_arousal:.2f} (omitted {arousal_omit_cnt})\n-- valence: agree {valence_agree_cnt}/{valence_cnt} = {agree_rate_valence:.2f} (omitted {valence_omit_cnt})")
+            #print(f"~~~~~~~~~~~~\n{fn}:\n-- arousal: agree {arousal_agree_cnt}/{arousal_cnt} = {agree_rate_arousal:.2f} (omitted {arousal_omit_cnt})\n-- valence: agree {valence_agree_cnt}/{valence_cnt} = {agree_rate_valence:.2f} (omitted {valence_omit_cnt})")
+            print(f"{fn}, {arousal_agree_cnt}, {arousal_cnt}, {agree_rate_arousal:.2f},{arousal_omit_cnt}")
+
+    print("valence")
+    for filepath in prediction_paths:
+        with open(filepath, 'r') as f:
+            prediction_data = json.load(f)
+            basename = os.path.basename(filepath)
+            fn, ext = os.path.splitext(basename)
+
+            arousal_agree_cnt, arousal_omit_cnt, \
+                arousal_cnt, valence_agree_cnt, \
+                valence_omit_cnt, valence_cnt = compare_with_ground_truth(annotations_self, prediction_data)
+
+            agree_rate_arousal = arousal_agree_cnt / arousal_cnt
+            agree_rate_valence = valence_agree_cnt / valence_cnt
+            #print(f"~~~~~~~~~~~~\n{fn}:\n-- arousal: agree {arousal_agree_cnt}/{arousal_cnt} = {agree_rate_arousal:.2f} (omitted {arousal_omit_cnt})\n-- valence: agree {valence_agree_cnt}/{valence_cnt} = {agree_rate_valence:.2f} (omitted {valence_omit_cnt})")
+            print(f"{fn}, {valence_agree_cnt},{valence_cnt},{agree_rate_valence:.2f},{valence_omit_cnt}")
 
     ############################################################
     ############## SPOTIFY ANNOTATIONS #########################
@@ -222,7 +251,8 @@ def do_compare_annotations(remove_inconsistencies = False):
 
     agree_rate_arousal = arousal_agree_cnt / arousal_cnt
     agree_rate_valence = valence_agree_cnt / valence_cnt
-    print(f"~~~~~~~~~~~~\nspotify!:\n-- arousal: agree {arousal_agree_cnt}/{arousal_cnt} = {agree_rate_arousal:.2f} (omitted {arousal_omit_cnt})\n-- valence: agree {valence_agree_cnt}/{valence_cnt} = {agree_rate_valence:.2f} (omitted {valence_omit_cnt})")
+    #print(f"~~~~~~~~~~~~\nspotify!:\n-- arousal: accuracy {arousal_agree_cnt}/{arousal_cnt} = {agree_rate_arousal:.2f} (omitted {arousal_omit_cnt})\n-- valence: accuracy {valence_agree_cnt}/{valence_cnt} = {agree_rate_valence:.2f} (omitted {valence_omit_cnt})")
+    print(f"~~~~~~~~~~~~\nspotify!:\n-- arousal: accuracy \n {arousal_agree_cnt}, {arousal_cnt}, {agree_rate_arousal:.2f},{arousal_omit_cnt}\n-- valence: accuracy \n {valence_agree_cnt},{valence_cnt},{agree_rate_valence:.2f},{valence_omit_cnt}")
     return annotations_self
 
 
