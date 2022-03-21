@@ -7,7 +7,7 @@ from essentia import Pool
 from essentia.standard import (
     MonoLoader,
     TensorflowPredict,
-    TensorflowPredictMusiCNN
+    TensorflowPredictEffnetDiscogs
 )
 
 # Model files for inference of embeddings and arousal/valence.
@@ -73,7 +73,8 @@ input_layer = "melspectrogram"
 output_layer = "onnx_tf_prefix_BatchNormalization_496/add_1"
 
 # Instantiate the embeddings model
-embeddings_model = TensorflowPredictMusiCNN(
+#embeddings_model = TensorflowPredictMusiCNN(
+embeddings_model = TensorflowPredictEffnetDiscogs(
     graphFilename=embeddings_model_path,
     input=input_layer,
     output=output_layer,

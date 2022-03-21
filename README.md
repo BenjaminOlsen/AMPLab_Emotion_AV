@@ -33,3 +33,5 @@ then run the scripts:
     ./deam_vggish.py
 
 sloppy but effective
+
+to run the annotation comparison
