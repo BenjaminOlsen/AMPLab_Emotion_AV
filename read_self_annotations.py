@@ -3,7 +3,6 @@ import os
 import json
 from math import inf
 
-### read spotify annotations
 annotation_dir = 'self_annotations'
 total_annot_cnt = 0
 all_annot_paths = []
@@ -100,7 +99,7 @@ for filepath in all_annot_paths:
         #    av_dict[b_name][a_name]['arousal'] = -a_arous
         #    av_dict[b_name][a_name]['valence'] = -a_valence
             print("~~~~~~~~~")
-            print("a {} - v {} / a {} - v {}".format(av_dict[a_name][b_name]['arousal'], av_dict[a_name][b_name]['valence'], av_dict[b_name][a_name]['arousal'], av_dict[b_name][a_name]['valence']))
+            print("a {} - v {} ".format(av_dict[a_name][b_name]['arousal'], av_dict[a_name][b_name]['valence']))
         except Exception as e:
             print ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! wtf: {}".format(e))
 
