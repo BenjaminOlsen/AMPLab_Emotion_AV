@@ -17,7 +17,7 @@ def remove_inconsistent_triplets(annotations_self):
             arousal_ab = annotations_self[a][b]['arousal']
             valence_ab = annotations_self[a][b]['valence']
             for c in annotations_self[a]:
-                if b != a and b in annotations_self:
+                if b != c and b in annotations_self:
                     if c in annotations_self[b]:
                         # a,b; b,c; a,c:
                         arousal_ac = annotations_self[a][c]['arousal']
@@ -25,7 +25,8 @@ def remove_inconsistent_triplets(annotations_self):
 
                         arousal_bc = annotations_self[b][c]['arousal']
                         valence_bc = annotations_self[b][c]['valence']
-                        print(f"[remove_inconsistent_triplets]: inspecting a: {a}, b: {b}, c: {c}")
+                        if PRINT_DEBUG:
+                            print(f"[remove_inconsistent_triplets]: inspecting a: {a}, b: {b}, c: {c}")
                 elif c != b and c in annotations_self:
                     if b in annotations_self[c]:
                         # a,b; a,c; c,b
@@ -34,13 +35,15 @@ def remove_inconsistent_triplets(annotations_self):
 
                         arousal_bc = -annotations_self[c][b]['arousal']
                         valence_bc = -annotations_self[c][b]['valence']
-                        print(f"[remove_inconsistent_triplets]: inspecting a: {a}, b: {b}, c: {c}")
+                        if PRINT_DEBUG:
+                            print(f"[remove_inconsistent_triplets]: inspecting a: {a}, b: {b}, c: {c}")
                 else:
                     continue
 
                 # if there is inconsistency, mark each as inf to ignore!
                 if valence_ab == valence_bc and valence_ab != valence_ac:
-                    print(f"[inconsistency] - valence: removing [{a}][{b}], [{a}][{c}],[{b}][{c}]")
+                    if PRINT_DEBUG:
+                        print(f"[inconsistency] - valence: removing [{a}][{b}], [{a}][{c}],[{b}][{c}]")
                     annotations_self[a][b]['valence'] = math.inf
                     annotations_self[a][c]['valence'] = math.inf
                     if b in annotations_self and c in annotations_self[b]:
@@ -48,9 +51,10 @@ def remove_inconsistent_triplets(annotations_self):
                     elif c in annotations_self and b in annotations_self[c]:
                         annotations_self[c][b]['valence'] = math.inf
                     else:
-                        print("ABSURDDDD")
-                        
+                        print(f"[inconsistency] - ABSURDDDD error with inconsistncies: a: {a}, b: {b}, c: {c}")
+
                 if arousal_ab == arousal_bc and arousal_ab != arousal_ac:
+
                     print(f"[inconsistency] - arousal: removing [{a}][{b}], [{a}][{c}],[{b}][{c}]")
                     annotations_self[a][b]['arousal'] = math.inf
                     annotations_self[a][c]['arousal'] = math.inf
@@ -59,7 +63,7 @@ def remove_inconsistent_triplets(annotations_self):
                     elif c in annotations_self and b in annotations_self[c]:
                         annotations_self[c][b]['arousal'] = math.inf
                     else:
-                        print("ABSURDDDD")
+                        print(f"[inconsistency] - ABSURDDDD error with inconsistncies: a: {a}, b: {b}, c: {c}")
     return annotations_self
 
 def do_compare_annotations(remove_inconsistencies = False):
