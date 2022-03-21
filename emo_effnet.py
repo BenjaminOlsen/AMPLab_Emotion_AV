@@ -7,7 +7,7 @@ from essentia import Pool
 from essentia.standard import (
     MonoLoader,
     TensorflowPredict,
-    TensorflowPredictEffnetDiscogs
+    TensorflowPredictMusiCNN
 )
 
 # Model files for inference of embeddings and arousal/valence.
