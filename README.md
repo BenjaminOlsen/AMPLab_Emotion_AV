@@ -32,6 +32,26 @@ then run the scripts:
     ./deam_musicnn.py
     ./deam_vggish.py
 
-sloppy but effective
+sloppy but effective.
 
-to run the annotation comparison
+Once this is completed, in order to run the annotation comparison, you must first extract the annotations in self_annotations.zip,
+and then process them into a json file by:
+    python3 read_self_annotations.py
+
+then process the spotify annotations, jsonifying them:
+    python3 read_spotify_annotations.py
+
+Finally, the data can be summarized and the results printed by running:
+    python3 compare_annotations.py
+    
+you May have to change the path to the annotations folder in the compare_annotations.py folder to get it to work!
+
+best of luck.
+
+Ben
+
+
+
+
+
+
